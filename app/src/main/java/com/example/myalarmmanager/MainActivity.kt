@@ -60,16 +60,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DatePickerFragme
             }
         }
 
+        // One Time Alarm
         binding?.btnOnceDate?.setOnClickListener(this)
         binding?.btnOnceTime?.setOnClickListener(this)
         binding?.btnSetOnceAlarm?.setOnClickListener(this)
+
+        // Repeating Alarm
+        binding?.btnRepeatingTime?.setOnClickListener(this)
+        binding?.btnSetRepeatingAlarm?.setOnClickListener(this)
+
         alarmReceiver = AlarmReceiver()
-
-
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
+            // One Time Alarm
             R.id.btn_once_date -> {
                 val datePickerFragment = DatePickerFragment()
                 datePickerFragment.show(supportFragmentManager, DATE_PICKER_TAG)
@@ -89,6 +94,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DatePickerFragme
                     onceTime,
                     onceMessage)
 
+            }
+
+            // Repeating Alarm
+            R.id.btn_repeating_time -> {
+                val timePickerFragmentRepeat = TimePickerFragment()
+                timePickerFragmentRepeat.show(supportFragmentManager, TIME_PICKER_REPEAT_TAG)
+            }
+            R.id.btn_set_repeating_alarm -> {
+                val repeatTime = binding?.tvRepeatingTime?.text.toString()
+                val repeatMessage = binding?.edtRepeatingMessage?.text.toString()
+                alarmReceiver.setRepeatingAlarmManager(this, AlarmReceiver.TYPE_REPEATING,
+                    repeatTime, repeatMessage)
             }
         }
     }
@@ -121,7 +138,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, DatePickerFragme
 
         when (tag) {
             TIME_PICKER_ONCE_TAG -> binding?.tvOnceTime?.text = dateFormat.format(calendar.time)
-            TIME_PICKER_REPEAT_TAG -> {}
+            TIME_PICKER_REPEAT_TAG -> binding?.tvRepeatingTime?.text = dateFormat.format(calendar.time)
             else -> {
             }
         }
